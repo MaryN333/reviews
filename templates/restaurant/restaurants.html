@@ -42,7 +42,7 @@
         <tr>
             <td>
                 <h4 class='ms-2'>
-                    <a href={% url "restaurant:single_restaurant" rest.id %} class="text-decoration-none">{{rest.title}}
+                    <a href={% url "restaurant:single_restaurant" rest.id %} class="text-decoration-none">{{rest.title}}</a>
                         <br>
                     {% if rest.avg_rating is not None %}
                         {% with ''|center:rest.avg_rating as stars %}
@@ -100,7 +100,7 @@
                 </div>
                 <div class="card-footer mb-3 border-0 bg-light">
                     <a class="btn btn-primary px-4 ms-2"
-                    href="">Read more ...</a>
+                    href={% url "restaurant:single_restaurant" rest.id %}>Read more ...</a>
                     
                 </div>
             </div>
