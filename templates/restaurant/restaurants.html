@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}All restaurants guide{% endblock %}
+
+{% block content %}
+<h1 class="my-5 text-center">Reviews</h1>
+{% if not user.is_authenticated %}
+    <h5 class="my-5 text-center">If you would like to leave a comment, please Sign Up or Log In</h5>
+{% endif %}
+
+
+{% comment %} S E A R C H   F O R M {% endcomment %}
+<div class="container">
+    <form action="">
+        <div class="mb-3" style="width:35rem">
+            <label class="form-label">Search for Restaurant:</label>
+            <input type="text" name="searchRestaurant" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary text-white">Search</button>
+    </form>
+    {% if searchTerm %}
+        Searching for {{ searchTerm }}
+    {% endif %}
+ </div>
+
+
+{% comment %} T A B L E {% endcomment %}
+<table class="table mt-5 table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Photo</th>
+            <th>Place</th>
+            <th>Type</th>
+            <th>Number of reviews</th>
+            {% comment %} <th>Average Rating</th> {% endcomment %}
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rest in restaurants %}
+        <tr>
+            <td>
+                <h4 class='ms-2'>
+                    <a href={% url "restaurant:single_restaurant" rest.id %} class="text-decoration-none">{{rest.title}}
+                        <br>
+                    {% if rest.avg_rating is not None %}
+                        {% with ''|center:rest.avg_rating as stars %}
+                            {% for _ in stars %}
+                                <img src="../../static/images/small_star.jpg" alt="Star">
+                            {% endfor %}
+                        {% endwith %}
+                    {% else %}
+                    <span class="text-secondary fs-5">No ratings yet</span>
+                        
+                    {% endif %}
+                </a></h4>
+                
+            </td>
+
+            <td style="width: 19.5rem;"><img class="card-img-top" style="height: 10rem; width: 18rem; overflow: hidden;" src="{{ rest.image.url }}" alt="photo"></td>
+            <td style="width: 25rem;">{{rest.place}}</td>
+            <td>{{rest.type}}</td>
+            <td>{{ rest.num_comments }}</td>           
+            <td><a class="btn btn-primary text-white px-4" href={% url "restaurant:single_restaurant" rest.id%}>Look</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+{% comment %} C A R D S {% endcomment %}
+<div class="d-flex justify-content-between gy-2 pb-5 mt-5">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+        {% for rest in restaurants %}
+        <div v-for="rest in restaurants" class="col mb-2">
+            <div class="blog card h-150 bg-light border rounded" style="width: 19.5rem; height: 33rem;">
+                <img class="card-img-top" style="height: 13rem;" src="{{ rest.image.url }}" alt="photo">
+                <div class="card-body" style="height: 16rem; overflow: hidden;">
+                    <h5 class="card-title fw-bold ms-2"><a class="" href={% url "restaurant:single_restaurant" rest.id %}>{{ rest.title }}</a></h5>
+                    
+                    <p class="card-text ms-2">
+                        {% if rest.avg_rating is not None %}
+                            {% with ''|center:rest.avg_rating as stars %}
+                                {% for _ in stars %}
+                                    <img src="../../static/images/small_star.jpg" alt="Star">
+                                {% endfor %}
+                            {% endwith %}
+                        {% else %}
+                            No ratings yet
+                        {% endif %}
+                    </p>
+                    <p class="card-text ms-2">{{ rest.place }}</p>
+                    <p class="card-text ms-2">{{ rest.type }}</p>
+                    <p class="card-text ms-2">Reviews: {{ rest.num_comments }}</p>
+                    {% comment %} <p class="card-text ms-2">Avg rating: {{ rest.avg_rating|default:"No ratings yet" }}</p> {% endcomment %}
+                    <p class="card-text ms-2">{{ rest.note }}</p>
+                </div>
+                <div class="card-footer mb-3 border-0 bg-light">
+                    <a class="btn btn-primary px-4 ms-2"
+                    href="">Read more ...</a>
+                    
+                </div>
+            </div>
+        </div>        
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

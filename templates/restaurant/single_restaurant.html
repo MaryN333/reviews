@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{restaurant.title}}{% endblock %}
+
+{% block content %}
+<div class="container mb-5">
+    <h1 class="mt-5 mb-5">{{restaurant.title}}</h1>
+    <div class="row">
+        <div class="col-sm-8">
+            <p>{{ restaurant.note }}</p>
+        </div>
+        <div class="col-sm-4 text-center">
+            <img class="card-img-top" style="height: 15rem;" src="{{ restaurant.image.url }}" alt="photo">
+        </div>
+    </div>
+    
+    
+    <div class="row mt-3">
+        <div class="col-sm-2">
+            <p><b>Address:</b></p>
+        </div>
+        <div class="col-sm-4">
+            {{restaurant.place}}
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-sm-2">
+            <p><b>Type:</b></p>
+        </div>
+        <div class="col-sm-4">
+            {{restaurant.type}}
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-sm-2">
+            <p><b>Number of Reviews:</b></p>
+        </div>
+        <div class="col-sm-4">
+            {{num_reviews}}
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-sm-2">
+            <p><b>Average Rating:</b></p>
+        </div>
+        <div class="col-sm-4">
+            {{avg_rating}}
+        </div>
+    </div>
+   
+
+    <h3 class="mt-5">Reviews</h3>
+    {% if user.is_authenticated %}
+    <!-- Users who are not logged in will not see the Add Review link. -->
+        <a href="{% url 'restaurant:createreview' restaurant.id %}" class="btn btn-primary px-4 py-1my-3">Add Review</a>
+    {% endif %}
+
+    {% if user.is_authenticated and not reviews %}
+        <h5>There is no any review jet.  Leave your feedback and be the first.</h5>
+    {% elif not reviews %}
+        <h5>There is no any review yet.</h5>
+    {% endif %}
+
+
+    <ul class="list-group">
+        {% for review in reviews %}
+        <li class="list-group-item pb-3 pt-3">
+            <h5 class="card-title">
+                Review by <span class="text-success">{{ review.user.username }}</span>
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                {{ review.created_at }}
+            </h6>
+            <p class="card-text">{{ review.note }}</p>
+            <p class="card-text">Expenses, $: {{ review.expenses }}</p>
+            <p class="card-text">Visit date: {{ review.visit_date }}</p>
+            
+
+            {% with ''|center:review.stars as stars %}
+            {% for _ in stars %}
+                <img src="../../static/images/star.png" alt="Star">
+            {% endfor %}                
+            {% endwith %}
+
+            <br>
+            
+
+            {% if user.is_authenticated and user == review.user %}
+                <a class="btn btn-primary px-4 py-1 me-2 mt-3" href="{% url 'restaurant:updatereview' review.id %}">Update</a>
+                <a class="btn btn-danger px-4 py-1 mt-3" href="{% url 'restaurant:deletereview' review.id %}">Delete</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}

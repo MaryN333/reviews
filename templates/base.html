@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light text-muted fixed-top p-3">
+        <div class="container">
+            <a href={% url "restaurant:index" %} class="navbar-brand"><h4>Restaurants Reviews</h4></a>
+            <span class="navbar-text">
+                <a href="{% url 'restaurant:index'%}" class="me-5">Home</a>
+                <a href="api/v1/" class="me-5" target="_blank">API</a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logoutaccount' %}" class="me-5">Log out ({{ user.username }})</a>
+                {% else %}
+                    <a href="{% url 'loginaccount' %}" class="me-5">Log in</a>
+                    <a href="{% url 'signupaccount' %}" class="me-5">Sign Up</a>
+                {% endif %}
+                <a href="/admin/" class="me-5" target="_blank">Admin</a>
+            </span>
+        </div>
+    </nav>
+
+    <main class="container content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="text-center text-lg-start bg-light text-muted mt-4">
+        <div class="text-center p-4">
+            <img src="{% static 'images/my.jpg' %}" class="border rounded-circle" style="height:6rem" alt="it`s me" title="it`s me">
+            © <a class="text-reset fw-bold text-decoration-none" target="_blank" href="http://www.marysidy.wz.cz/">Maru, 2024 </a>
+        </div>
+    </footer>
+</body>
+</html>
